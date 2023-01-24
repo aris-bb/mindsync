@@ -1,0 +1,30 @@
+$num-texts: 3;
+$transition-time: 4;
+
+$animation-time: $num-texts * $transition-time;
+
+.animated-text {
+    position: absolute;
+    p {
+        position: absolute;
+        opacity:0;
+        animation: text-animation #{$animation-time}s ease-in-out infinite;
+        animation-fill-mode: forwards;
+        @for $i from 1 through $num-texts {
+            &:nth-of-type(#{$i}) {
+                animation-delay: #{($i - 1) * ($animation-time / $num-texts)}s;
+            }
+        }
+    }
+}
+@keyframes text-animation {
+    0%   { opacity: 0; filter:blur(64px)}
+    33.3% { opacity: 0; filter:blur(64px) }
+    50% { opacity: 1; filter:blur(0px)}
+    66% { opacity: 1; filter:blur(0px)}
+    100% { opacity: 0; filter:blur(64px)}
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

@@ -15,8 +15,8 @@ export default function AboutPage() {
     //   Here&apos;s a random number from a sub: {num} <br />
     //   <Link href="/">Index</Link>
     // </div>
-    <div>
-      <header className="backdrop-blur fixed left-0 right-0">
+    <div className="min-h-screen bg-black">
+      <header className="backdrop-blur">
         <nav className="border-b border-neutral-700">
           <div className="container mx-auto flex items-center justify-center px-4 py-3">
             <div className="flex items-center mx-4">
@@ -77,16 +77,24 @@ export default function AboutPage() {
           </div>
         </nav>
       </header>
-      <div className="min-h-screen grid grid-rows-2 bg-black">
+      <div className="grid grid-rows-2">
         <div className="row-span-1 flex items-center justify-center text-center">
           <div>
             <span className="px-0.5 tracking-tighter leading-tight text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-400">
               MindSync
               <br />A new way to
             </span>
-            <span className="px-1 tracking-tighter text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-pink-600 to-pink-100">
-              collaborate.
-              {/* share, collaborate, synchronize */}
+            {/* share, collaborate, synchronize */}
+            <span className="animated-text">
+              <p className="px-1 tracking-tighter text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-pink-600 to-pink-100">
+                collaborate.
+              </p>
+              <p className="px-1 tracking-tighter text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-purple-600 to-purple-100">
+                share.
+              </p>
+              <p className="px-1 tracking-tighter text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-blue-600 to-blue-100">
+                synchronize.
+              </p>
             </span>
             <br />
             <span className="px-1 tracking-tighter text-2xl bg-clip-text text-gray-300">
