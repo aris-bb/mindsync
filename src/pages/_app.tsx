@@ -3,15 +3,18 @@ import type { Session } from 'next-auth';
 import { getSession, SessionProvider } from 'next-auth/react';
 import type { AppType } from 'next/app';
 import { trpc } from 'utils/trpc';
+import Layout from 'components/layout';
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps,
 }) => {
   return (
-    <SessionProvider session={pageProps.session}>
-      <Component {...pageProps} />
-    </SessionProvider>
+    <Layout>
+      <SessionProvider session={pageProps.session}>
+        <Component {...pageProps} />
+      </SessionProvider>
+    </Layout>
   );
 };
 

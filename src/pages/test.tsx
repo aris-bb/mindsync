@@ -1,9 +1,6 @@
 import Link from 'next/link';
-import Header from 'components/Header';
 import { useState } from 'react';
 import { trpc } from 'utils/trpc';
-import HeroHeading from 'components/HeroHeading';
-import AnimatedText from 'components/AnimatedText';
 import { ArrowDownCircleIcon } from '@heroicons/react/24/solid';
 
 export default function AboutPage() {
@@ -19,24 +16,26 @@ export default function AboutPage() {
     //   Here&apos;s a random number from a sub: {num} <br />
     //   <Link href="/">Index</Link>
     // </div>
-    <div className="min-h-screen min-w-screen bg-black">
-      <Header />
-
-      <div className="text-center py-20">
-        <HeroHeading>MindSync</HeroHeading>
-        <HeroHeading>A new way to</HeroHeading>
-
-        <h1 className="animated-text tracking-tighter leading-tight lg:text-8xl md:text-7xl sm:text-6xl text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-400">
-          <AnimatedText className="from-pink-600 to-pink-100">
-            collaborate.h
-          </AnimatedText>
-          <AnimatedText className="from-purple-600 to-purple-100">
-            coordinate.
-          </AnimatedText>
-          <AnimatedText className="from-indigo-600 to-indigo-100">
-            synchronize.
-          </AnimatedText>
+    <main className="min-h-screen min-w-screen bg-black">
+      <div className="text-center py-32 border-b border-zinc-800">
+        <h1 className="tracking-tighter leading-tight lg:text-8xl md:text-7xl sm:text-6xl text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-400">
+          MindSync
         </h1>
+
+        <h2 className="tracking-tighter leading-tight lg:text-8xl md:text-7xl sm:text-6xl text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-600">
+          A new way to
+          <div className="animated-text">
+            <span className="bg-clip-text bg-gradient-to-br from-pink-600 to-pink-100">
+              collaborate.
+            </span>
+            <span className="bg-clip-text bg-gradient-to-br from-purple-600 to-purple-100">
+              coordinate.
+            </span>
+            <span className="bg-clip-text bg-gradient-to-br from-indigo-600 to-indigo-100">
+              synchronize.
+            </span>
+          </div>
+        </h2>
 
         <p className="pt-10 pb-24 lg:px-32 tracking-tighter text-2xl bg-clip-text text-gray-300">
           Unleash the power of collective intelligence with MindSync - the
@@ -60,6 +59,6 @@ export default function AboutPage() {
           </Link>
         </div> */}
       </div>
-    </div>
+    </main>
   );
 }
