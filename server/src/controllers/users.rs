@@ -2,75 +2,30 @@ use argon2::{
     password_hash::{rand_core::OsRng, PasswordHasher, PasswordVerifier, SaltString},
     Argon2,
 };
-use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
+use axum::{
+    async_trait,
+    extract::{rejection::FormRejection, FromRequest, State},
+    http::{Request, StatusCode},
+    response::IntoResponse,
+    Error, Form, Json,
+};
 use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, Validation};
 use mongodb::{bson::doc, Database};
+use serde::de::DeserializeOwned;
 use serde_json::json;
 use std::env;
 use validator::Validate;
 
-use crate::models::{api::users::*, database::user::User};
-
-// pub struct DbError(mongodb::error::Error);
-
-// impl IntoResponse for DbError {
-//     fn into_response(self) -> axum::response::Response {
-//         (
-//             StatusCode::INTERNAL_SERVER_ERROR,
-//             format!("Error: {}", self.0),
-//         )
-//             .into_response()
-//     }
-// }
-
-// impl<E> From<E> for DbError
-// where
-//     E: Into<mongodb::error::Error>,
-// {
-//     fn from(err: E) -> Self {
-//         Self(err.into())
-//     }
-// }
-
-pub struct AppError(anyhow::Error);
-
-impl IntoResponse for AppError {
-    fn into_response(self) -> axum::response::Response {
-        (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Error: {}", self.0),
-        )
-            .into_response()
-    }
-}
-
-impl<E> From<E> for AppError
-where
-    E: Into<anyhow::Error>,
-{
-    fn from(err: E) -> Self {
-        Self(err.into())
-    }
-}
-
-// impl IntoResponse for mongodb::error::Error {
-//     fn into_response(self) -> axum::response::Response {
-//         (
-//             StatusCode::INTERNAL_SERVER_ERROR,
-//             format!("Error: {}", self.0),
-//         )
-//             .into_response()
-//     }
-// }
+use crate::models::user::User;
+use crate::viewmodels::users::*;
 
 pub async fn register(
     State(db): State<Database>,
     Json(payload): Json<RegisterPayload>,
-) -> Result<impl IntoResponse, AppError> {
-    // if let Err(errors) = payload.validate() {
-    //     return Ok((StatusCode::BAD_REQUEST, Json(errors)).into_response());
-    // }
-    payload.validate()?;
+) -> impl IntoResponse {
+    if let Err(errors) = payload.validate() {
+        return (StatusCode::BAD_REQUEST, Json(errors)).into_response();
+    }
 
     // Check if username or email already exists
     let existing_user = db
@@ -79,26 +34,25 @@ pub async fn register(
             doc! {"$or": [{"username": &payload.username}, {"email": &payload.email}]},
             None,
         )
-        .await?;
+        .await;
 
-    // if let Err(existing_user_error) = existing_user {
-    //     return (
-    //         StatusCode::INTERNAL_SERVER_ERROR,
-    //         Json(existing_user_error.to_string()),
-    //     )
-    //         .into_response();
-    // } else {
-    //     tracing::debug!("{:?}", existing_user);
-    // }
+    if let Err(existing_user_error) = existing_user {
+        return (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(existing_user_error.to_string()), // TODO: Do not show db errors in production
+        )
+            .into_response();
+    }
 
-    Ok((StatusCode::OK, Json(json!({"hello": 1}))).into_response())
+    if let Ok(Some(_)) = existing_user {
+        return (
+            StatusCode::CONFLICT,
+            Json("Username or email already exists"),
+        )
+            .into_response();
+    }
 
-    // if let Ok(Some(_)) = existing_user {
-    //     return (
-    //         StatusCode::CONFLICT,
-    //         Err("Username or email already exists"),
-    //     );
-    // }
+    (StatusCode::OK, Json(json!({"hello": 1}))).into_response()
 
     // // Generate a salt and hash the password
     // let salt = SaltString::generate(&mut OsRng);
