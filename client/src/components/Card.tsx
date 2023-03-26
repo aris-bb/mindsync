@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from "react";
 
-const Card: React.FC = () => {
+interface CardProps {
+  text: string;
+  onCardClick: () => void;
+}
+
+const Card: React.FC<CardProps> = ({ text, onCardClick }) => {
   const [tilt, setTilt] = useState<
     { transform: string; transition?: string } | false
   >(false);
+
   const [hoverPosition, setHoverPosition] = useState<{
     x: number;
     y: number;
   } | null>(null);
+
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [fadeOutTimeout, setFadeOutTimeout] = useState<NodeJS.Timeout | null>(
     null
@@ -32,7 +39,7 @@ const Card: React.FC = () => {
     const centerY = card.offsetTop + cardHeight / 2;
     const mouseX = event.pageX - centerX;
     const mouseY = event.pageY - centerY;
-    const rotationX = (mouseY / cardHeight) * -20;
+    const rotationX = (mouseY / cardHeight) * 20;
     const rotationY = (mouseX / cardWidth) * -20;
     setTilt({
       transform: `perspective(1000px) rotateX(${rotationX}deg) rotateY(${rotationY}deg)`,
@@ -53,15 +60,14 @@ const Card: React.FC = () => {
 
   return (
     <div
-      className="shadow-md rounded-lg bg-black border border-zinc-700 p-6 relative overflow-hidden"
+      className="card shadow-md rounded-lg bg-black border border-zinc-700 p-6 overflow-hidden relative"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onClick={onCardClick}
       style={tilt ? tilt : undefined}
     >
       <h2 className="text-lg font-bold mb-2">Card Title</h2>
-      <p className="text-gray-600">
-        fgjhgjghjfgjhgjghjfgjhgjghjfgjhgjghjfgjhgjghjfgjhgjghjfgjhgjghjfgjhgjghjfgjhgjghjfgjhgjghjfgjhgjghj
-      </p>
+      <p className="text-gray-600 text-left whitespace-pre-wrap">{text}</p>
       {hoverPosition && (
         <div
           className="hover-glow"
